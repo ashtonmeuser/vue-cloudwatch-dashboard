@@ -3,13 +3,27 @@
     :width="width"
     :height="height"
     :title="title">
-    <LineChart class="chart-holder"/>
+    <LineChart
+      :chart-data="chartData"
+      class="chart-holder"/>
   </Tile>
 </template>
 
 <script>
 import Tile from './Tile.vue';
 import LineChart from './charts/LineChart.vue';
+
+const colors = [
+  '#4D9DE0',
+  '#E15554',
+  '#E1BC29',
+  '#3BB273',
+  '#7768AE',
+  '#F56476',
+  '#E28413',
+  '#FCB0B3',
+  '#23F0C7',
+];
 
 export default {
   components: {
@@ -20,13 +34,26 @@ export default {
   extends: Tile,
 
   props: {
-    value: {
-      type: Number,
-      default: 0,
+    data: {
+      type: Array,
+      default: () => [],
     },
-    unit: {
-      type: String,
-      default: null,
+  },
+
+  computed: {
+    chartData() {
+      return {
+        datasets: this.data.map((data, index) => ({
+          label: data.label,
+          data: data.data,
+          // lineTension: 0,
+          fill: false,
+          borderWidth: 2,
+          borderColor: colors[index],
+          backgroundColor: colors[index],
+          pointBackgroundColor: colors[index],
+        })),
+      };
     },
   },
 };

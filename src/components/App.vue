@@ -13,9 +13,10 @@
       title="Tile 4"
     />
     <ChartTile
+      :data="service.data"
       :width="2"
       :height="2"
-      title="Tile 5"
+      title="Invocations"
     />
     <ValueTile
       title="Tile 6"
@@ -32,13 +33,41 @@
 import Tile from './Tile.vue';
 import ValueTile from './ValueTile.vue';
 import ChartTile from './ChartTile.vue';
+import CloudWatchService from '../services/CloudWatchService';
 
 export default {
   name: 'App',
+
   components: {
     Tile,
     ValueTile,
     ChartTile,
+  },
+
+  data: () => ({
+    service: new CloudWatchService(),
+    task: null,
+  }),
+
+  computed: {
+    // invocations() {
+    //   return this.service.data.filter(d => d.group === 'invocations')
+    // }
+  },
+
+  created() {
+    this.update();
+    this.task = setInterval(this.update, 5 * 60 * 1000);
+  },
+
+  beforeDestroy() {
+    clearInterval(this.task);
+  },
+
+  methods: {
+    async update() {
+      this.data = await this.service.update();
+    },
   },
 };
 </script>

@@ -1,20 +1,29 @@
+import axios from 'axios';
+
 export default class CloudWatchService {
   constructor(metrics) {
-    this.data = [];
     this.metrics = metrics;
-    this.start();
-    this.getMetrics();
+    this.updatedAt = null;
+    this.data = [];
   }
 
-  start() {
-    this.worker = setInterval(this.getMetrics, 5000);
-  }
-
-  stop() {
-    clearInterval(this.worker);
-  }
-
-  async getMetrics() {
-    this.updatedAt = Date.now();
+  async update() {
+    const options = {
+      url: process.env.API_ENDPOINT,
+      method: 'get',
+      headers: {
+        'X-Api-Key': process.env.API_KEY,
+      },
+      // data: {
+      //
+      // },
+    };
+    try {
+      const updatedAt = Date.now();
+      const data = await axios.request(options);
+      this.updatedAt = updatedAt; // Doesn't reach if request failed
+      this.data = data.data;
+    } catch (error) { } // eslint-disable-line no-empty
+    return this.data;
   }
 }
