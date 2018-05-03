@@ -2,7 +2,7 @@
   <div id="app">
     <Tile title="Tile 1"/>
     <ValueTile
-      :data="duration"
+      :data="tags('duration')"
       :decimal-places="0"
       title="Duration"
       unit="ms"
@@ -13,13 +13,13 @@
       title="Tile 3"
     />
     <ChartTile
-      :data="duration"
+      :data="tags('duration')"
       :width="2"
       :height="2"
       title="Duration"
     />
     <ChartTile
-      :data="invocations"
+      :data="tags('invocations')"
       :width="2"
       :height="2"
       title="Invocations"
@@ -47,8 +47,6 @@ const cloudWatchServiceOptions = {
   backfillMinutes: 2 * 60,
 };
 
-const filterByTags = (data, tag) => typeof data.tags === 'object' && data.tags.includes(tag);
-
 export default {
   name: 'App',
 
@@ -63,15 +61,6 @@ export default {
     task: null,
   }),
 
-  computed: {
-    invocations() {
-      return this.service.data.filter(d => filterByTags(d, 'invocations'));
-    },
-    duration() {
-      return this.service.data.filter(d => filterByTags(d, 'duration'));
-    },
-  },
-
   created() {
     this.update();
     this.task = setInterval(this.update, this.service.periodMinutes * 60000);
@@ -84,6 +73,16 @@ export default {
   methods: {
     async update() {
       this.data = await this.service.update();
+    },
+    tags(tags) {
+      return this.service.data.filter((d) => {
+        if (!Array.isArray(d.tags)) {
+          return false; // No tags for data
+        } else if (Array.isArray(tags)) {
+          return [...new Set([...d.tags, ...tags])].length > 0; // Arrays share element
+        }
+        return d.tags.includes(tags); // String in tags
+      });
     },
   },
 };
