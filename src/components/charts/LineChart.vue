@@ -1,7 +1,7 @@
 <script>
 import { Line, mixins } from 'vue-chartjs';
 
-const options = {
+const chartOptions = {
   animation: {
     duration: 0,
   },
@@ -25,7 +25,9 @@ const options = {
         drawBorder: false,
         color: 'rgba(255, 255, 255, 0.05)',
       },
-      ticks: { fontColor: 'white' },
+      ticks: {
+        fontColor: 'white',
+      },
     }],
     yAxes: [{
       color: 'white',
@@ -34,7 +36,10 @@ const options = {
         drawBorder: false,
         color: 'rgba(255, 255, 255, 0.05)',
       },
-      ticks: { fontColor: 'white' },
+      ticks: {
+        fontColor: 'white',
+        callback: value => (Math.floor(value) === value ? value : null),
+      },
     }],
   },
   elements: {
@@ -63,12 +68,12 @@ export default {
     },
     options: {
       type: Object,
-      default: () => options,
+      default: () => chartOptions,
     },
   },
 
   mounted() {
-    this.renderChart(this.chartData, options);
+    this.renderChart(this.chartData, this.options);
   },
 };
 </script>

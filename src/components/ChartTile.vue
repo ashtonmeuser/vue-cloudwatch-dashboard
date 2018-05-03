@@ -23,6 +23,7 @@ const colors = [
   '#E28413',
   '#FCB0B3',
   '#23F0C7',
+  '#870058',
 ];
 
 export default {
@@ -34,7 +35,7 @@ export default {
   extends: Tile,
 
   props: {
-    data: {
+    datasets: {
       type: Array,
       default: () => [],
     },
@@ -43,15 +44,15 @@ export default {
   computed: {
     chartData() {
       return {
-        datasets: this.data.map((data, index) => ({
+        datasets: this.datasets.map((data, index) => ({
           label: data.label,
           data: data.data,
           lineTension: 0.3,
           fill: false,
           borderWidth: 2,
-          borderColor: colors[index],
-          backgroundColor: colors[index],
-          pointBackgroundColor: colors[index],
+          borderColor: colors[index % colors.length],
+          backgroundColor: colors[index % colors.length],
+          pointBackgroundColor: colors[index % colors.length],
         })),
       };
     },

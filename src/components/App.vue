@@ -1,37 +1,41 @@
 <template>
   <div id="app">
     <Tile title="Tile 1"/>
-    <ValueTile
-      :data="tags('duration')"
-      :decimal-places="0"
-      title="Avg. Duration"
-      unit="ms"
-    />
+    <Tile title="Tile 2"/>
     <ChartTile
-    :data="tags('errors')"
+      :datasets="tags('errors')"
       :width="2"
       :height="2"
       title="Lambda Errors"
     />
+    <Tile title="Tile 3"/>
+    <ValueTile
+      title="Avg. Duration"
+      unit="ms">
+      <template slot="before">
+        Hi!
+      </template>
+      <template slot="value">
+        <Average
+          :datasets="tags('duration')"
+          :decimal-places="0"
+        />
+      </template>
+      <template slot="after">
+        <PercentileChange :value="20"/>
+      </template>
+    </ValueTile>
     <ChartTile
-      :data="tags('duration')"
+      :datasets="tags('duration')"
       :width="2"
       :height="2"
       title="Lambda Duration"
     />
     <ChartTile
-      :data="tags('invocations')"
+      :datasets="tags('invocations')"
       :width="2"
       :height="2"
       title="Lambda Invocations"
-    />
-    <ValueTile
-      title="Tile 6"
-      unit="&#176;C"
-    />
-    <ValueTile
-      title="Tile 7"
-      unit="&#176;C"
     />
   </div>
 </template>
@@ -40,6 +44,8 @@
 import Tile from './Tile.vue';
 import ValueTile from './ValueTile.vue';
 import ChartTile from './ChartTile.vue';
+import Average from './Average.vue';
+import PercentileChange from './PercentileChange.vue';
 import CloudWatchService from '../services/CloudWatchService';
 import metrics from '../metrics.json';
 
@@ -55,6 +61,8 @@ export default {
     Tile,
     ValueTile,
     ChartTile,
+    Average,
+    PercentileChange,
   },
 
   data: () => ({
@@ -76,7 +84,7 @@ export default {
       this.data = await this.service.update();
     },
     tags(tags) {
-      return this.service.data.filter((d) => {
+      return this.service.datasets.filter((d) => {
         if (!Array.isArray(d.tags)) {
           return false; // No tags for data
         } else if (Array.isArray(tags)) {

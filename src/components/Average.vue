@@ -5,7 +5,7 @@
 <script>
 export default {
   props: {
-    data: {
+    datasets: {
       type: Array,
       default: () => [],
     },
@@ -16,8 +16,15 @@ export default {
   },
 
   computed: {
+    mergedDataNoZeros() {
+      return this.datasets.reduce((merged, dataset) => (
+        merged.concat(dataset.data.filter(d => d.y > 0))
+      ), []);
+    },
     average() {
-      return this.data.reduce((sum, data) => sum + data.y, 0) / this.data.length;
+      const noZeros = this.mergedDataNoZeros;
+      return noZeros
+        .reduce((sum, data) => sum + data.y, 0) / noZeros.length;
     },
   },
 };

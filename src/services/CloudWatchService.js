@@ -11,7 +11,7 @@ export default class CloudWatchService {
     this.backfillMinutes = backfillMinutes;
     this.maxDatapoints = Math.ceil(backfillMinutes / periodMinutes);
     this.updatedAt = null;
-    this.data = [];
+    this.datasets = [];
   }
 
   async update() {
@@ -28,24 +28,24 @@ export default class CloudWatchService {
       },
     };
     try {
-      const data = await axios.request(options);
+      const response = await axios.request(options);
       this.updatedAt = new Date(); // Doesn't reach if request failed
-      this.appendData(data.data);
+      this.appendData(response.data);
     } catch (error) { } // eslint-disable-line no-empty
     return this.data;
   }
 
   appendData(data) {
     data.forEach((newDataset) => {
-      const oldIndex = this.data.findIndex(d => d.id === newDataset.id);
+      const oldIndex = this.datasets.findIndex(oldDataset => oldDataset.id === newDataset.id);
       if (oldIndex >= 0) { // Found
-        const oldData = this.data[oldIndex].data;
-        this.data[oldIndex].data = oldData.concat(newDataset.data);
+        const oldData = this.datasets[oldIndex].data;
+        this.datasets[oldIndex].data = oldData.concat(newDataset.data);
       } else { // New dataset
-        this.data.push(this.tagAndLabel(newDataset));
+        this.datasets.push(this.tagAndLabel(newDataset));
       }
     });
-    this.data = this.data.map(d => Object.assign(d, {
+    this.datasets = this.datasets.map(d => Object.assign(d, {
       data: removeDatasetDuplicates(d.data).slice(this.maxDatapoints * -1), // Ensure moving window
     }));
   }

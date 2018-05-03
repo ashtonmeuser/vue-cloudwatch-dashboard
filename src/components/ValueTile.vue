@@ -3,18 +3,17 @@
     :width="width"
     :height="height"
     :title="title">
+    <slot name="before"/>
     <div>
-      <Average
-        :data="concatDataNoZeros"
-        :decimal-places="decimalPlaces"
-        class="value"
-      />
+      <span class="value">
+        <slot name="value"/>
+      </span>
       <span
         v-if="unit"
         class="unit"
         v-html="unit"/>
     </div>
-    <PercentileChange :value="20"/>
+    <slot name="after"/>
   </Tile>
 </template>
 
@@ -33,10 +32,6 @@ export default {
   extends: Tile,
 
   props: {
-    decimalPlaces: {
-      type: Number,
-      default: 0,
-    },
     unit: {
       type: String,
       default: null,
@@ -44,14 +39,6 @@ export default {
     data: {
       type: Array,
       default: () => [],
-    },
-  },
-
-  computed: {
-    concatDataNoZeros() {
-      return this.data.reduce((sum, data) => ({
-        data: sum.data.concat(data.data.filter(b => b.y > 1)),
-      }), { data: [] }).data;
     },
   },
 };
