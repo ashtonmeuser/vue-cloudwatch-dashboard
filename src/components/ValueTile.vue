@@ -4,7 +4,11 @@
     :height="height"
     :title="title">
     <div>
-      <span class="value">{{ value.toFixed(2) }}</span>
+      <Average
+        :data="concatDataNoZeros"
+        :decimal-places="decimalPlaces"
+        class="value"
+      />
       <span
         v-if="unit"
         class="unit"
@@ -16,24 +20,38 @@
 
 <script>
 import Tile from './Tile.vue';
+import Average from './Average.vue';
 import PercentileChange from './PercentileChange.vue';
 
 export default {
   components: {
     Tile,
+    Average,
     PercentileChange,
   },
 
   extends: Tile,
 
   props: {
-    value: {
+    decimalPlaces: {
       type: Number,
       default: 0,
     },
     unit: {
       type: String,
       default: null,
+    },
+    data: {
+      type: Array,
+      default: () => [],
+    },
+  },
+
+  computed: {
+    concatDataNoZeros() {
+      return this.data.reduce((sum, data) => ({
+        data: sum.data.concat(data.data.filter(b => b.y > 1)),
+      }), { data: [] }).data;
     },
   },
 };
@@ -45,6 +63,9 @@ export default {
   .value {
     font-size: 2em;
     font-weight: bold;
+    @media only screen and (min-width: $break-point) {
+      font-size: 3em;
+    }
   }
   .unit {
     font-size: 0.8em;

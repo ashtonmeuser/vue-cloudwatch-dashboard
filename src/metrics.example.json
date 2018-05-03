@@ -1,0 +1,40 @@
+[
+  {
+    "id": "invocationsCreate",
+    "tags": ["invocations"],
+    "label": "Create",
+    "dimensionName": "FunctionName",
+    "dimensionValue": "fn-name-create",
+    "name": "Invocations",
+    "namespace": "AWS/Lambda"
+  },
+  {
+    "id": "invocationsGet",
+    "tags": ["invocations"],
+    "label": "Get",
+    "dimensionName": "FunctionName",
+    "dimensionValue": "fn-name-get",
+    "name": "Invocations",
+    "namespace": "AWS/Lambda"
+  },
+  {
+    "id": "durationCreate",
+    "tags": ["duration"],
+    "label": "Create",
+    "dimensionName": "FunctionName",
+    "dimensionValue": "fn-name-create",
+    "name": "Duration",
+    "namespace": "AWS/Lambda",
+    "stat": "Average"
+  },
+  {
+    "id": "durationGet",
+    "tags": ["duration"],
+    "label": "Get",
+    "dimensionName": "FunctionName",
+    "dimensionValue": "fn-name-get",
+    "name": "Duration",
+    "namespace": "AWS/Lambda",
+    "stat": "Average"
+  }
+]

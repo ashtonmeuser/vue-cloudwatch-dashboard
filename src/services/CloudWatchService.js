@@ -37,14 +37,25 @@ export default class CloudWatchService {
 
   appendData(data) {
     data.forEach((newDataset) => {
-      const oldIndex = this.data.findIndex(d => d.label === newDataset.label);
+      const oldIndex = this.data.findIndex(d => d.id === newDataset.id);
       if (oldIndex >= 0) { // Found
         const oldData = this.data[oldIndex].data;
-        this.data[oldIndex].data = removeDatasetDuplicates(oldData.concat(newDataset.data))
-          .slice(this.maxDatapoints * -1);
+        this.data[oldIndex].data = oldData.concat(newDataset.data);
       } else { // New dataset
-        this.data.push(newDataset);
+        this.data.push(this.tagAndLabel(newDataset));
       }
+    });
+    this.data = this.data.map(d => Object.assign(d, {
+      data: removeDatasetDuplicates(d.data).slice(this.maxDatapoints * -1), // Ensure moving window
+    }));
+  }
+
+  tagAndLabel(data) {
+    // Add tags and labels from metrics objects
+    const metric = this.metrics.find(m => m.id === data.id);
+    return typeof metric === 'undefined' ? data : Object.assign(data, {
+      tags: metric.tags,
+      label: metric.label,
     });
   }
 }

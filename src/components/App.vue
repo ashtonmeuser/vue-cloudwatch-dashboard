@@ -1,19 +1,25 @@
 <template>
   <div id="app">
     <Tile title="Tile 1"/>
-    <Tile title="Tile 2"/>
+    <ValueTile
+      :data="duration"
+      :decimal-places="0"
+      title="Duration"
+      unit="ms"
+    />
     <ChartTile
       :width="2"
       :height="2"
       title="Tile 3"
     />
     <ChartTile
+      :data="duration"
       :width="2"
       :height="2"
-      title="Tile 4"
+      title="Duration"
     />
     <ChartTile
-      :data="service.data"
+      :data="invocations"
       :width="2"
       :height="2"
       title="Invocations"
@@ -34,34 +40,14 @@ import Tile from './Tile.vue';
 import ValueTile from './ValueTile.vue';
 import ChartTile from './ChartTile.vue';
 import CloudWatchService from '../services/CloudWatchService';
+import metrics from '../metrics.json';
 
-const metrics = [
-  {
-    label: 'Notify',
-    dimensionName: 'FunctionName',
-    dimensionValue: 'ama-prod-notify',
-    name: 'Invocations',
-    namespace: 'AWS/Lambda',
-  },
-  {
-    label: 'Vote',
-    dimensionName: 'FunctionName',
-    dimensionValue: 'ama-prod-vote',
-    name: 'Invocations',
-    namespace: 'AWS/Lambda',
-  },
-  {
-    label: 'Create',
-    dimensionName: 'FunctionName',
-    dimensionValue: 'ama-prod-create',
-    name: 'Invocations',
-    namespace: 'AWS/Lambda',
-  },
-];
-const options = {
+const cloudWatchServiceOptions = {
   periodMinutes: 5,
-  backfillMinutes: 120,
+  backfillMinutes: 2 * 60,
 };
+
+const filterByTags = (data, tag) => typeof data.tags === 'object' && data.tags.includes(tag);
 
 export default {
   name: 'App',
@@ -73,14 +59,17 @@ export default {
   },
 
   data: () => ({
-    service: new CloudWatchService(options, metrics),
+    service: new CloudWatchService(cloudWatchServiceOptions, metrics),
     task: null,
   }),
 
   computed: {
-    // invocations() {
-    //   return this.service.data.filter(d => d.group === 'invocations')
-    // }
+    invocations() {
+      return this.service.data.filter(d => filterByTags(d, 'invocations'));
+    },
+    duration() {
+      return this.service.data.filter(d => filterByTags(d, 'duration'));
+    },
   },
 
   created() {
