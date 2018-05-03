@@ -35,6 +35,34 @@ import ValueTile from './ValueTile.vue';
 import ChartTile from './ChartTile.vue';
 import CloudWatchService from '../services/CloudWatchService';
 
+const metrics = [
+  {
+    label: 'Notify',
+    dimensionName: 'FunctionName',
+    dimensionValue: 'ama-prod-notify',
+    name: 'Invocations',
+    namespace: 'AWS/Lambda',
+  },
+  {
+    label: 'Vote',
+    dimensionName: 'FunctionName',
+    dimensionValue: 'ama-prod-vote',
+    name: 'Invocations',
+    namespace: 'AWS/Lambda',
+  },
+  {
+    label: 'Create',
+    dimensionName: 'FunctionName',
+    dimensionValue: 'ama-prod-create',
+    name: 'Invocations',
+    namespace: 'AWS/Lambda',
+  },
+];
+const options = {
+  periodMinutes: 5,
+  backfillMinutes: 120,
+};
+
 export default {
   name: 'App',
 
@@ -45,7 +73,7 @@ export default {
   },
 
   data: () => ({
-    service: new CloudWatchService(),
+    service: new CloudWatchService(options, metrics),
     task: null,
   }),
 
@@ -57,7 +85,7 @@ export default {
 
   created() {
     this.update();
-    this.task = setInterval(this.update, 5 * 60 * 1000);
+    this.task = setInterval(this.update, this.service.periodMinutes * 60000);
   },
 
   beforeDestroy() {

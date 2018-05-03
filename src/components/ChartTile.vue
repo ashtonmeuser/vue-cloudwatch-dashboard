@@ -46,7 +46,7 @@ export default {
         datasets: this.data.map((data, index) => ({
           label: data.label,
           data: data.data,
-          // lineTension: 0,
+          lineTension: 0.3,
           fill: false,
           borderWidth: 2,
           borderColor: colors[index],
