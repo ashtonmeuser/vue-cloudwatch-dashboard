@@ -4,25 +4,26 @@
     <ValueTile
       :data="tags('duration')"
       :decimal-places="0"
-      title="Duration"
+      title="Avg. Duration"
       unit="ms"
     />
     <ChartTile
+    :data="tags('errors')"
       :width="2"
       :height="2"
-      title="Tile 3"
+      title="Lambda Errors"
     />
     <ChartTile
       :data="tags('duration')"
       :width="2"
       :height="2"
-      title="Duration"
+      title="Lambda Duration"
     />
     <ChartTile
       :data="tags('invocations')"
       :width="2"
       :height="2"
-      title="Invocations"
+      title="Lambda Invocations"
     />
     <ValueTile
       title="Tile 6"
@@ -100,7 +101,7 @@ export default {
     grid-auto-rows: minmax(150px, 1fr);
     grid-gap: 1em;
     background-color: $background-color;
-    @media only screen and (min-width: $break-point) {
+    @media only screen and (min-width: $small) {
       grid-template-columns: repeat(4, 1fr);
     }
   }
