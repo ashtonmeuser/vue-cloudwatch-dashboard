@@ -12,6 +12,7 @@
 <script>
 import Tile from './Tile.vue';
 import LineChart from './charts/LineChart.vue';
+import DatasetArray from '../services/DatasetArray';
 
 const colors = [
   '#4D9DE0',
@@ -36,8 +37,8 @@ export default {
 
   props: {
     datasets: {
-      type: Array,
-      default: () => [],
+      type: Object,
+      default: () => new DatasetArray(),
     },
   },
 

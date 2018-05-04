@@ -40,7 +40,6 @@ export default {
 
 <style scoped lang="scss">
   @import "~@/styles/vars.scss";
-
   .tile {
     font: 1em "Nunito";
     color: white;

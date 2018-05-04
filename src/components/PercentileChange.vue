@@ -2,7 +2,7 @@
   <span
     :class="trend"
     class="change">
-    <span v-html="indicator"/> {{ Math.abs(percent) }}%
+    <span v-html="indicator"/> {{ Math.abs(percent).toFixed(1) }}%
   </span>
 </template>
 
@@ -12,6 +12,10 @@ export default {
     value: {
       type: Number,
       default: 0,
+    },
+    percentThreshold: {
+      type: Number,
+      default: 1,
     },
   },
 
@@ -24,7 +28,7 @@ export default {
 
   computed: {
     indicator() {
-      if (Math.abs(this.percent) < 1) {
+      if (Math.abs(this.percent) < this.percentThreshold) {
         return '&#x25cf;';
       }
       return this.percent > 0 ? '&#9650;' : '&#9660;';
@@ -32,10 +36,10 @@ export default {
   },
 
   watch: {
-    value: (newValue, oldValue) => {
-      const percent = Math.round(((newValue - oldValue) / oldValue) * 100);
-      this.percent = percent !== Infinity && typeof percent === 'number' ? percent : 0;
-      if (Math.abs(this.percent) < 1) {
+    value(newValue, oldValue) {
+      const percent = ((newValue - oldValue) / oldValue) * 100;
+      this.percent = percent !== Infinity && !Number.isNaN(percent) ? percent : 0;
+      if (Math.abs(this.percent) < this.percentThreshold) {
         this.trend = 'even';
       } else {
         this.trend = this.percent > 0 ? 'up' : 'down';
@@ -47,7 +51,6 @@ export default {
 
 <style scoped lang="scss">
   @import "~@/styles/vars.scss";
-
   .up {
     color: $green;
   }

@@ -1,7 +1,8 @@
 import axios from 'axios';
+import DatasetArray from './DatasetArray';
 
-const removeDatasetDuplicates = dataset => dataset.filter((data, index, array) => (
-  array.map(d => d.t).lastIndexOf(data.t) === index
+const removeDataDuplicates = data => data.filter((d, index, array) => (
+  array.map(a => a.t).lastIndexOf(d.t) === index
 ));
 
 export default class CloudWatchService {
@@ -11,7 +12,7 @@ export default class CloudWatchService {
     this.backfillMinutes = backfillMinutes;
     this.maxDatapoints = Math.ceil(backfillMinutes / periodMinutes);
     this.updatedAt = null;
-    this.datasets = [];
+    this.datasets = new DatasetArray();
   }
 
   async update() {
@@ -35,19 +36,19 @@ export default class CloudWatchService {
     return this.data;
   }
 
-  appendData(data) {
-    data.forEach((newDataset) => {
+  appendData(datasets) {
+    datasets.forEach((newDataset) => {
       const oldIndex = this.datasets.findIndex(oldDataset => oldDataset.id === newDataset.id);
       if (oldIndex >= 0) { // Found
-        const oldData = this.datasets[oldIndex].data;
-        this.datasets[oldIndex].data = oldData.concat(newDataset.data);
+        this.datasets[oldIndex].data.push(...newDataset.data);
       } else { // New dataset
         this.datasets.push(this.tagAndLabel(newDataset));
       }
     });
-    this.datasets = this.datasets.map(d => Object.assign(d, {
-      data: removeDatasetDuplicates(d.data).slice(this.maxDatapoints * -1), // Ensure moving window
-    }));
+    this.datasets.forEach((dataset, index) => {
+      this.datasets[index].data = removeDataDuplicates(dataset.data)
+        .slice(this.maxDatapoints * -1); // Ensure moving window
+    });
   }
 
   tagAndLabel(data) {

@@ -3,40 +3,49 @@
     <Tile title="Tile 1"/>
     <Tile title="Tile 2"/>
     <ChartTile
-      :datasets="tags('errors')"
+      :datasets="service.datasets.tagged('errors')"
       :width="2"
       :height="2"
       title="Lambda Errors"
     />
-    <Tile title="Tile 3"/>
     <ValueTile
+      :value="percentErrorRate()"
+      :decimal-places="2"
+      title="Errors"
+      unit="%ER">
+      <template slot="before">
+        {{ service.datasets.tagged('errors').sum() }} errors total
+      </template>
+      <template slot="after">
+        <PercentileChange :value="percentErrorRate()"/>
+      </template>
+    </ValueTile>
+    <ValueTile
+      :value="service.datasets.tagged('duration').average()"
       title="Avg. Duration"
       unit="ms">
       <template slot="before">
         Hi!
       </template>
-      <template slot="value">
-        <Average
-          :datasets="tags('duration')"
-          :decimal-places="0"
-        />
-      </template>
       <template slot="after">
-        <PercentileChange :value="20"/>
+        <PercentileChange :value="service.datasets.tagged('duration').average()"/>
       </template>
     </ValueTile>
     <ChartTile
-      :datasets="tags('duration')"
+      :datasets="service.datasets.tagged('duration')"
       :width="2"
       :height="2"
       title="Lambda Duration"
     />
     <ChartTile
-      :datasets="tags('invocations')"
+      :datasets="service.datasets.tagged('invocations')"
       :width="2"
       :height="2"
       title="Lambda Invocations"
     />
+    <div class="updated">
+      Updated <RelativeDate :date="service.updatedAt"/>
+    </div>
   </div>
 </template>
 
@@ -44,8 +53,8 @@
 import Tile from './Tile.vue';
 import ValueTile from './ValueTile.vue';
 import ChartTile from './ChartTile.vue';
-import Average from './Average.vue';
 import PercentileChange from './PercentileChange.vue';
+import RelativeDate from './RelativeDate.vue';
 import CloudWatchService from '../services/CloudWatchService';
 import metrics from '../metrics.json';
 
@@ -61,8 +70,8 @@ export default {
     Tile,
     ValueTile,
     ChartTile,
-    Average,
     PercentileChange,
+    RelativeDate,
   },
 
   data: () => ({
@@ -81,7 +90,10 @@ export default {
 
   methods: {
     async update() {
-      this.data = await this.service.update();
+      await this.service.update();
+    },
+    percentErrorRate() {
+      return (this.service.datasets.tagged('errors').sum() / this.service.datasets.tagged('invocations').sum()) * 100;
     },
     tags(tags) {
       return this.service.datasets.filter((d) => {
@@ -101,8 +113,9 @@ export default {
 <style scoped lang="scss">
   @import "~@/styles/vars.scss";
   #app {
+    position: relative;
     box-sizing: border-box;
-    padding: 1em;
+    padding: 1em 1em 1.5em 1em;
     min-height: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -112,5 +125,13 @@ export default {
     @media only screen and (min-width: $small) {
       grid-template-columns: repeat(4, 1fr);
     }
+  }
+  .updated {
+    font: 1em "Nunito";
+    padding: 0 1em 0.2em 0;
+    color: $secondary-font;
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 </style>

@@ -3,42 +3,47 @@
     :width="width"
     :height="height"
     :title="title">
-    <slot name="before"/>
+    <span class="detail">
+      <slot name="before"/>
+    </span>
     <div>
-      <span class="value">
-        <slot name="value"/>
-      </span>
+      <span
+        class="value"
+        v-html="value.toFixed(decimalPlaces)"
+      />
       <span
         v-if="unit"
         class="unit"
         v-html="unit"/>
     </div>
-    <slot name="after"/>
+    <span class="detail">
+      <slot name="after"/>
+    </span>
   </Tile>
 </template>
 
 <script>
 import Tile from './Tile.vue';
-import Average from './Average.vue';
-import PercentileChange from './PercentileChange.vue';
 
 export default {
   components: {
     Tile,
-    Average,
-    PercentileChange,
   },
 
   extends: Tile,
 
   props: {
+    value: {
+      type: Number,
+      default: NaN,
+    },
+    decimalPlaces: {
+      type: Number,
+      default: 0,
+    },
     unit: {
       type: String,
       default: null,
-    },
-    data: {
-      type: Array,
-      default: () => [],
     },
   },
 };
@@ -46,7 +51,6 @@ export default {
 
 <style scoped lang="scss">
   @import "~@/styles/vars.scss";
-
   .value {
     font-size: 2em;
     font-weight: bold;
@@ -56,6 +60,9 @@ export default {
     @media only screen and (min-width: $large) {
       font-size: 5em;
     }
+  }
+  .detail {
+    color: $secondary-font;
   }
   .unit {
     font-size: 0.8em;
