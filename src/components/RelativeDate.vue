@@ -25,16 +25,16 @@ export default {
 
       if (delta < 30) {
         return 'just now';
-      } else if (delta < 90) {
+      } else if (delta < 2 * 60) {
         return 'a minute ago';
       } else if (delta < 60 * 60) {
-        return `${Math.round(delta / 60)} minutes ago`;
-      } else if (Math.floor(delta / (60 * 60)) <= 1) {
+        return `${Math.floor(delta / 60)} minutes ago`;
+      } else if (delta < 2 * 60 * 60) {
         return 'an hour ago';
-      } else if (delta < 60 * 60 * 48) {
-        return `${Math.round(delta / (60 * 60))} hours ago`;
+      } else if (delta < 2 * 24 * 60 * 60) {
+        return `${Math.floor(delta / (60 * 60))} hours ago`;
       }
-      return `${Math.round(delta / (60 * 60 * 24))} days ago`;
+      return `${Math.floor(delta / (60 * 60 * 24))} days ago`;
     },
   },
 

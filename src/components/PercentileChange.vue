@@ -2,7 +2,7 @@
   <span
     :class="trend"
     class="change">
-    <span v-html="indicator"/> {{ Math.abs(percent).toFixed(1) }}%
+    <span v-html="indicator"/> {{ Math.abs(percent).toFixed(decimalPlaces) }}%
   </span>
 </template>
 
@@ -17,6 +17,10 @@ export default {
       type: Number,
       default: 1,
     },
+    decimalPlaces: {
+      type: Number,
+      default: 1,
+    },
   },
 
   data() {
@@ -28,7 +32,7 @@ export default {
 
   computed: {
     indicator() {
-      if (Math.abs(this.percent) < this.percentThreshold) {
+      if (Math.abs(this.percent) < 0.5 / (10 ** this.decimalPlaces)) {
         return '&#x25cf;';
       }
       return this.percent > 0 ? '&#9650;' : '&#9660;';
