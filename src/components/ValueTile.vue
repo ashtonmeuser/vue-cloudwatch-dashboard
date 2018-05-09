@@ -2,31 +2,31 @@
   <Tile
     :width="width"
     :height="height"
-    :title="title">
-    <span class="detail">
+    :title="title"
+    :color="color">
+    <div class="detail">
       <slot name="before"/>
-    </span>
-    <div>
-      <span
-        class="value"
-        v-html="value.toFixed(decimalPlaces)"
-      />
-      <span
-        v-if="unit"
-        class="unit"
-        v-html="unit"/>
     </div>
-    <span class="detail">
+    <div class="value">
+      <Value
+        :value="value"
+        :unit="unit"
+        :precision="precision"
+      />
+    </div>
+    <div class="detail">
       <slot name="after"/>
-    </span>
+    </div>
   </Tile>
 </template>
 
 <script>
+import Value from './Value.vue';
 import Tile from './Tile.vue';
 
 export default {
   components: {
+    Value,
     Tile,
   },
 
@@ -37,13 +37,13 @@ export default {
       type: Number,
       default: NaN,
     },
-    decimalPlaces: {
+    precision: {
       type: Number,
-      default: 0,
+      default: 3,
     },
     unit: {
       type: String,
-      default: null,
+      default: '',
     },
   },
 };
@@ -54,6 +54,9 @@ export default {
   .value {
     font-size: 2em;
     font-weight: bold;
+    /deep/ .unit {
+      font-size: 0.4em;
+    }
     @media only screen and (min-width: $small) {
       font-size: 3em;
     }
@@ -63,9 +66,5 @@ export default {
   }
   .detail {
     color: $secondary-font;
-  }
-  .unit {
-    font-size: 0.8em;
-    font-weight: bold;
   }
 </style>
