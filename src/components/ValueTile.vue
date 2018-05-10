@@ -55,13 +55,6 @@ export default {
   .value {
     font-size: 2em;
     font-weight: bold;
-    @media only screen and (min-width: $small) {
-      font-size: 3em;
-    }
-    @media only screen and (min-width: $large) {
-      font-size: 5em;
-      line-height: 1em;
-    }
   }
   .detail {
     max-width: 100%;

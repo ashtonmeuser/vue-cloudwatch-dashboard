@@ -150,7 +150,8 @@ export default {
   }
   .updated {
     font: 1em "Nunito";
-    padding: 0 1em 0.2em 0;
+    padding-right: 1em;
+    line-height: 1.5em;
     color: $secondary-font;
     position: absolute;
     bottom: 0;

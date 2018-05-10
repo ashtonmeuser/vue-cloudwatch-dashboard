@@ -54,6 +54,12 @@ export default {
     display: flex;
     flex-direction: column;
     background-color: $tile-color;
+    @media only screen and (min-width: $small) {
+      font-size: 1.2em;
+    }
+    @media only screen and (min-width: $large) {
+      font-size: 1.5em;
+    }
   }
   .title {
     white-space: nowrap;
