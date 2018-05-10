@@ -1,28 +1,43 @@
 <template>
   <div id="app">
-    <Tile title="Tile 1"/>
-    <Tile title="Tile 2"/>
+    <Tile
+      title="Tile 1"
+      color="#3f906b"
+    />
+    <ValueTile
+      :value="messagesPerMinute"
+      :decimal-places="2"
+      unit="/hr"
+      title="MQTT Messages"
+      color="#3f906b">
+      <template slot="before">
+        {{ messagesProjection }} proj.
+      </template>
+    </ValueTile>
     <ChartTile
       :datasets="service.datasets.tagged('errors')"
       :width="2"
       :height="2"
       title="Lambda Errors"
+      color="#3f906b"
     />
     <ValueTile
-      :value="percentErrorRate()"
+      :value="percentErrorRate"
       :decimal-places="2"
       title="Errors"
+      color="#3f906b"
       unit="%ER">
       <template slot="before">
-        {{ service.datasets.tagged('errors').sum() }} errors total
+        {{ service.datasets.tagged('errors').sum() }} error(s) total
       </template>
       <template slot="after">
-        <PercentileChange :value="percentErrorRate()"/>
+        <PercentileChange :value="percentErrorRate"/>
       </template>
     </ValueTile>
     <ValueTile
       :value="service.datasets.tagged('duration').average()"
       title="Avg. Duration"
+      color="#3f906b"
       unit="ms">
       <template slot="before">
         Hi!
@@ -36,12 +51,14 @@
       :width="2"
       :height="2"
       title="Lambda Duration"
+      color="#3f906b"
     />
     <ChartTile
       :datasets="service.datasets.tagged('invocations')"
       :width="2"
       :height="2"
       title="Lambda Invocations"
+      color="#3f906b"
     />
     <div class="updated">
       Updated <RelativeDate :date="service.updatedAt"/>
@@ -58,9 +75,11 @@ import RelativeDate from './RelativeDate.vue';
 import CloudWatchService from '../services/CloudWatchService';
 import metrics from '../metrics.json';
 
+const monthInMinutes = 30.5 * 24 * 60;
 const cloudWatchServiceOptions = {
   periodMinutes: 5,
   backfillMinutes: 2 * 60,
+  refreshMinutes: 5,
 };
 
 export default {
@@ -77,34 +96,24 @@ export default {
   data: () => ({
     service: new CloudWatchService(cloudWatchServiceOptions, metrics),
     task: null,
+    percentErrorRate: NaN,
+    messagesProjection: NaN,
+    messagesPerMinute: NaN,
   }),
 
-  created() {
-    this.update();
-    this.task = setInterval(this.update, this.service.periodMinutes * 60000);
+  watch: {
+    service: {
+      handler() {
+        this.messagesPerMinute = this.service.datasets.tagged('mqtt').sum() / (this.service.periodMinutes * 60);
+        this.percentErrorRate = (this.service.datasets.tagged('errors').sum() / this.service.datasets.tagged('invocations').sum()) * 100;
+        this.messagesProjection = this.service.datasets.tagged('mqtt').sum() * (monthInMinutes / this.service.backfillMinutes);
+      },
+      deep: true,
+    },
   },
 
   beforeDestroy() {
-    clearInterval(this.task);
-  },
-
-  methods: {
-    async update() {
-      await this.service.update();
-    },
-    percentErrorRate() {
-      return (this.service.datasets.tagged('errors').sum() / this.service.datasets.tagged('invocations').sum()) * 100;
-    },
-    tags(tags) {
-      return this.service.datasets.filter((d) => {
-        if (!Array.isArray(d.tags)) {
-          return false; // No tags for data
-        } else if (Array.isArray(tags)) {
-          return [...new Set([...d.tags, ...tags])].length > 0; // Arrays share element
-        }
-        return d.tags.includes(tags); // String in tags
-      });
-    },
+    this.service.stop();
   },
 };
 </script>

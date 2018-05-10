@@ -1,4 +1,21 @@
 export default class DatasetArray extends Array {
+  pushData(newDataset) {
+    const dataset = this.find(d => d.id === newDataset.id);
+    if (typeof dataset === 'undefined') {
+      return false; // No dataset with matching ID
+    }
+    dataset.data.push(...newDataset.data);
+    return true;
+  }
+
+  removeDataDuplicates(maxDatapoints = Infinity) {
+    this.forEach((dataset, index) => {
+      this[index].data = dataset.data
+        .filter((d, i, array) => array.map(a => a.t).lastIndexOf(d.t) === i)
+        .slice(maxDatapoints * -1); // Ensure moving window
+    });
+  }
+
   mergedDataNoZeros() {
     return this.reduce((merged, dataset) => (
       merged.concat(dataset.data.filter(d => d.y > 0))

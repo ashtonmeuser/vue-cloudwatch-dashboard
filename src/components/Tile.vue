@@ -2,9 +2,11 @@
   <div
     :style="style"
     class="tile">
-    <div class="title">
-      {{ title }}
-    </div>
+    <div
+      :style="{backgroundColor: color}"
+      class="title"
+      v-text="title"
+    />
     <div class="body">
       <slot/>
     </div>
@@ -28,6 +30,10 @@ export default {
       type: String,
       required: true,
     },
+    color: {
+      type: String,
+      default: '#8c8c8c',
+    },
   },
 
   computed: {
@@ -50,11 +56,14 @@ export default {
     background-color: $tile-color;
   }
   .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-weight: bold;
     padding: 0.5em;
-    background-color: $red;
   }
   .body {
+    overflow: hidden;
     flex-grow: 1;
     position: relative;
     display: flex;

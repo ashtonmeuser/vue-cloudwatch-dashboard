@@ -11,7 +11,7 @@ export default {
   props: {
     value: {
       type: Number,
-      default: 0,
+      default: NaN,
     },
     percentThreshold: {
       type: Number,
@@ -33,7 +33,7 @@ export default {
   computed: {
     indicator() {
       if (Math.abs(this.percent) < 0.5 / (10 ** this.decimalPlaces)) {
-        return '&#x25cf;';
+        return '&#9679;';
       }
       return this.percent > 0 ? '&#9650;' : '&#9660;';
     },

@@ -2,23 +2,24 @@
   <Tile
     :width="width"
     :height="height"
-    :title="title">
-    <span class="detail">
+    :title="title"
+    :color="color">
+    <div class="detail">
       <slot name="before"/>
-    </span>
+    </div>
     <div>
       <span
         class="value"
         v-html="value.toFixed(decimalPlaces)"
-      />
-      <span
+      /><span
         v-if="unit"
         class="unit"
-        v-html="unit"/>
+        v-html="unit"
+      />
     </div>
-    <span class="detail">
+    <div class="detail">
       <slot name="after"/>
-    </span>
+    </div>
   </Tile>
 </template>
 
@@ -62,6 +63,10 @@ export default {
     }
   }
   .detail {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: $secondary-font;
   }
   .unit {

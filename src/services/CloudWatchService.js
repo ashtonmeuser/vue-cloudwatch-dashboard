@@ -1,18 +1,26 @@
 import axios from 'axios';
 import DatasetArray from './DatasetArray';
 
-const removeDataDuplicates = data => data.filter((d, index, array) => (
-  array.map(a => a.t).lastIndexOf(d.t) === index
-));
-
 export default class CloudWatchService {
-  constructor({ periodMinutes = 5, backfillMinutes = 120 } = {}, metrics) {
+  constructor({ periodMinutes = 5, backfillMinutes = 120, refreshMinutes = 5 } = {}, metrics) {
     this.metrics = metrics;
     this.periodMinutes = periodMinutes;
     this.backfillMinutes = backfillMinutes;
+    this.refreshMinutes = refreshMinutes;
     this.maxDatapoints = Math.ceil(backfillMinutes / periodMinutes);
     this.updatedAt = null;
     this.datasets = new DatasetArray();
+    this.start();
+    this.tags = {};
+  }
+
+  start() {
+    this.update();
+    this.task = setInterval(this.update.bind(this), this.refreshMinutes * 60000);
+  }
+
+  stop() {
+    clearInterval(this.task);
   }
 
   async update() {
@@ -23,7 +31,7 @@ export default class CloudWatchService {
         'X-Api-Key': process.env.API_KEY,
       },
       data: {
-        start: this.updatedAt || new Date(Date.now() - (this.backfillMinutes * 60 * 1000)),
+        start: this.metricStartDate(),
         periodMinutes: this.periodMinutes,
         metrics: this.metrics,
       },
@@ -36,25 +44,30 @@ export default class CloudWatchService {
     return this.data;
   }
 
+  metricStartDate() {
+    const now = new Date();
+    if (this.updatedAt === null) {
+      return new Date(now - (this.backfillMinutes * 60000));
+    } else if (now - this.updatedAt > this.periodMinutes * 60000) {
+      return new Date(now.getTime() - (this.periodMinutes * 60000));
+    }
+    return this.updatedAt;
+  }
+
   appendData(datasets) {
     datasets.forEach((newDataset) => {
-      const oldIndex = this.datasets.findIndex(oldDataset => oldDataset.id === newDataset.id);
-      if (oldIndex >= 0) { // Found
-        this.datasets[oldIndex].data.push(...newDataset.data);
-      } else { // New dataset
+      if (!this.datasets.pushData(newDataset)) {
+        // New dataset, add tags and label, push
         this.datasets.push(this.tagAndLabel(newDataset));
       }
     });
-    this.datasets.forEach((dataset, index) => {
-      this.datasets[index].data = removeDataDuplicates(dataset.data)
-        .slice(this.maxDatapoints * -1); // Ensure moving window
-    });
+    this.datasets.removeDataDuplicates(this.maxDatapoints);
   }
 
-  tagAndLabel(data) {
+  tagAndLabel(dataset) {
     // Add tags and labels from metrics objects
-    const metric = this.metrics.find(m => m.id === data.id);
-    return typeof metric === 'undefined' ? data : Object.assign(data, {
+    const metric = this.metrics.find(m => m.id === dataset.id);
+    return typeof metric === 'undefined' ? dataset : Object.assign(dataset, {
       tags: metric.tags,
       label: metric.label,
     });

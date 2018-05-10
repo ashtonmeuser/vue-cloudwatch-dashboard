@@ -2,16 +2,18 @@
   <Tile
     :width="width"
     :height="height"
-    :title="title">
+    :title="title"
+    :color="color">
     <LineChart
       :chart-data="chartData"
-      class="chart-holder"/>
+      class="chart-holder"
+    />
   </Tile>
 </template>
 
 <script>
 import Tile from './Tile.vue';
-import LineChart from './charts/LineChart.vue';
+import LineChart from './LineChart.vue';
 import DatasetArray from '../services/DatasetArray';
 
 const colors = [
