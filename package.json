@@ -19,6 +19,7 @@
     "chart.js": "^2.7.2",
     "normalize.css": "^7.0.0",
     "object-assign": "^4.1.1",
+    "object-assign-deep": "^0.4.0",
     "offline-plugin": "^4.8.0",
     "promise-polyfill": "^6.0.2",
     "vue-chartjs": "^3.3.1"

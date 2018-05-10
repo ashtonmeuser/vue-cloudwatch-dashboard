@@ -60,6 +60,7 @@ export default {
     }
     @media only screen and (min-width: $large) {
       font-size: 5em;
+      line-height: 1em;
     }
   }
   .detail {

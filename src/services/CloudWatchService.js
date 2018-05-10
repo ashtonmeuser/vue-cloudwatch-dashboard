@@ -31,7 +31,7 @@ export default class CloudWatchService {
         'X-Api-Key': process.env.API_KEY,
       },
       data: {
-        start: this.metricStartDate(),
+        start: this.updatedAt || new Date(Date.now() - (this.backfillMinutes * 60 * 1000)),
         periodMinutes: this.periodMinutes,
         metrics: this.metrics,
       },
@@ -42,16 +42,6 @@ export default class CloudWatchService {
       this.appendData(response.data);
     } catch (error) { } // eslint-disable-line no-empty
     return this.data;
-  }
-
-  metricStartDate() {
-    const now = new Date();
-    if (this.updatedAt === null) {
-      return new Date(now - (this.backfillMinutes * 60000));
-    } else if (now - this.updatedAt > this.periodMinutes * 60000) {
-      return new Date(now.getTime() - (this.periodMinutes * 60000));
-    }
-    return this.updatedAt;
   }
 
   appendData(datasets) {
@@ -70,6 +60,7 @@ export default class CloudWatchService {
     return typeof metric === 'undefined' ? dataset : Object.assign(dataset, {
       tags: metric.tags,
       label: metric.label,
+      secondaryAxis: metric.secondaryAxis || false,
     });
   }
 }

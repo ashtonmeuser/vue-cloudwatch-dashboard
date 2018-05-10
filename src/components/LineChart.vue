@@ -1,5 +1,6 @@
 <script>
 import { Line, mixins } from 'vue-chartjs';
+import ObjectAssignDeep from 'object-assign-deep';
 
 const chartOptions = {
   animation: {
@@ -30,6 +31,8 @@ const chartOptions = {
       },
     }],
     yAxes: [{
+      id: 'primary',
+      position: 'left',
       color: 'white',
       gridLines: {
         zeroLineColor: 'transparent',
@@ -66,9 +69,32 @@ export default {
       type: Object,
       default: () => ({ datasets: [] }),
     },
-    options: {
-      type: Object,
-      default: () => chartOptions,
+    secondaryAxis: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  computed: {
+    options() {
+      const options = ObjectAssignDeep({}, chartOptions);
+      if (this.secondaryAxis) {
+        options.scales.yAxes[1] = {
+          id: 'secondary',
+          position: 'right',
+          color: 'white',
+          gridLines: {
+            zeroLineColor: 'transparent',
+            drawBorder: false,
+            color: 'rgba(255, 255, 255, 0.05)',
+          },
+          ticks: {
+            fontColor: 'white',
+            callback: value => (Math.floor(value) === value ? value : null),
+          },
+        };
+      }
+      return options;
     },
   },
 

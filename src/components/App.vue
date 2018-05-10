@@ -1,24 +1,37 @@
 <template>
   <div id="app">
-    <Tile
-      title="Tile 1"
-      color="#3f906b"
-    />
     <ValueTile
-      :value="messagesPerMinute"
-      :decimal-places="2"
+      :value="messagesPerHour"
+      :decimal-places="0"
       unit="/hr"
       title="MQTT Messages"
       color="#3f906b">
       <template slot="before">
-        {{ messagesProjection }} proj.
+        {{ messagesPerHour * 24 * 30.5 }} proj.
+      </template>
+      <template slot="after">
+        <PercentileChange :value="messagesPerHour"/>
       </template>
     </ValueTile>
+    <Tile
+      title="Dynamo DB"
+      color="#3f906b">
+      <LabelledRatio
+        :numerator="3"
+        :denominator="3"
+        label="WCU"
+      />
+      <LabelledRatio
+        :numerator="1.5"
+        :denominator="3"
+        label="RCU"
+      />
+    </Tile>
     <ChartTile
-      :datasets="service.datasets.tagged('errors')"
+      :datasets="service.datasets.tagged('spotify')"
       :width="2"
       :height="2"
-      title="Lambda Errors"
+      title="Spotify Search"
       color="#3f906b"
     />
     <ValueTile
@@ -28,7 +41,7 @@
       color="#3f906b"
       unit="%ER">
       <template slot="before">
-        {{ service.datasets.tagged('errors').sum() }} error(s) total
+        {{ service.datasets.tagged('errors').sum() }} total
       </template>
       <template slot="after">
         <PercentileChange :value="percentErrorRate"/>
@@ -40,7 +53,7 @@
       color="#3f906b"
       unit="ms">
       <template slot="before">
-        Hi!
+        {{ service.datasets.tagged('duration').max().toFixed(0) }}ms max.
       </template>
       <template slot="after">
         <PercentileChange :value="service.datasets.tagged('duration').average()"/>
@@ -71,11 +84,11 @@ import Tile from './Tile.vue';
 import ValueTile from './ValueTile.vue';
 import ChartTile from './ChartTile.vue';
 import PercentileChange from './PercentileChange.vue';
+import LabelledRatio from './LabelledRatio.vue';
 import RelativeDate from './RelativeDate.vue';
 import CloudWatchService from '../services/CloudWatchService';
 import metrics from '../metrics.json';
 
-const monthInMinutes = 30.5 * 24 * 60;
 const cloudWatchServiceOptions = {
   periodMinutes: 5,
   backfillMinutes: 2 * 60,
@@ -90,6 +103,7 @@ export default {
     ValueTile,
     ChartTile,
     PercentileChange,
+    LabelledRatio,
     RelativeDate,
   },
 
@@ -97,16 +111,14 @@ export default {
     service: new CloudWatchService(cloudWatchServiceOptions, metrics),
     task: null,
     percentErrorRate: NaN,
-    messagesProjection: NaN,
-    messagesPerMinute: NaN,
+    messagesPerHour: NaN,
   }),
 
   watch: {
     service: {
       handler() {
-        this.messagesPerMinute = this.service.datasets.tagged('mqtt').sum() / (this.service.periodMinutes * 60);
+        this.messagesPerHour = (this.service.datasets.tagged('mqtt').sum() * 60) / this.service.backfillMinutes;
         this.percentErrorRate = (this.service.datasets.tagged('errors').sum() / this.service.datasets.tagged('invocations').sum()) * 100;
-        this.messagesProjection = this.service.datasets.tagged('mqtt').sum() * (monthInMinutes / this.service.backfillMinutes);
       },
       deep: true,
     },
@@ -130,6 +142,7 @@ export default {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: minmax(150px, 1fr);
     grid-gap: 1em;
+    grid-auto-flow: row dense;
     background-color: $background-color;
     @media only screen and (min-width: $small) {
       grid-template-columns: repeat(4, 1fr);

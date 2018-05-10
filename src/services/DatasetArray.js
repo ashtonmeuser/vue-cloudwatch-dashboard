@@ -28,6 +28,13 @@ export default class DatasetArray extends Array {
       .reduce((sum, data) => sum + data.y, 0) / noZeros.length;
   }
 
+  max() {
+    const max = Math.max(...this.reduce((merged, dataset) => (
+      merged.concat(dataset.data.map(d => d.y))
+    ), []));
+    return max === -Infinity ? 0 : max;
+  }
+
   sum() {
     return this.reduce((sum, dataset) => (
       sum + dataset.data.reduce((s, d) => s + d.y, 0)

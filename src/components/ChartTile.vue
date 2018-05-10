@@ -6,6 +6,7 @@
     :color="color">
     <LineChart
       :chart-data="chartData"
+      :secondary-axis="secondaryAxis"
       class="chart-holder"
     />
   </Tile>
@@ -52,12 +53,16 @@ export default {
           data: data.data,
           lineTension: 0.3,
           fill: false,
+          yAxisID: data.secondaryAxis ? 'secondary' : 'primary',
           borderWidth: 2,
           borderColor: colors[index % colors.length],
           backgroundColor: colors[index % colors.length],
           pointBackgroundColor: colors[index % colors.length],
         })),
       };
+    },
+    secondaryAxis() {
+      return this.datasets.some(data => data.secondaryAxis);
     },
   },
 };
