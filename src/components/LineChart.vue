@@ -1,6 +1,6 @@
 <script>
 import { Line, mixins } from 'vue-chartjs';
-import ObjectAssignDeep from 'object-assign-deep';
+import objectAssignDeep from 'object-assign-deep';
 
 const chartOptions = {
   animation: {
@@ -77,7 +77,7 @@ export default {
 
   computed: {
     options() {
-      const options = ObjectAssignDeep({}, chartOptions);
+      const options = objectAssignDeep({}, chartOptions);
       if (this.secondaryAxis) {
         options.scales.yAxes[1] = {
           id: 'secondary',

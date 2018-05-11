@@ -1,3 +1,5 @@
+import objectAssignDeep from 'object-assign-deep';
+
 export default class DatasetArray extends Array {
   pushData(newDataset) {
     const dataset = this.find(d => d.id === newDataset.id);
@@ -41,13 +43,30 @@ export default class DatasetArray extends Array {
     ), 0);
   }
 
-  tagged(tags) {
+  latest(count = 1) {
     const datasets = new DatasetArray();
     this.forEach((dataset) => {
-      if (Array.isArray(tags) && [...new Set([...dataset.tags, ...tags])].length > 0) {
-        // Arrays share element
+      const trimmedDataset = objectAssignDeep({}, dataset);
+      trimmedDataset.data = trimmedDataset.data.slice(count * -1);
+      datasets.push(trimmedDataset);
+    });
+    return datasets;
+  }
+
+  tagged(tag) {
+    const datasets = new DatasetArray();
+    this.forEach((dataset) => {
+      if (dataset.tags.includes(tag)) {
         datasets.push(dataset);
-      } else if (typeof tags === 'string' && dataset.tags.includes(tags)) {
+      }
+    });
+    return datasets;
+  }
+
+  ided(id) {
+    const datasets = new DatasetArray();
+    this.forEach((dataset) => {
+      if (dataset.id === id) {
         datasets.push(dataset);
       }
     });

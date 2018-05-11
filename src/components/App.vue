@@ -7,7 +7,7 @@
       title="MQTT Messages"
       color="#3f906b">
       <template slot="before">
-        {{ messagesPerHour * 24 * 30.5 }} proj.
+        <EngrInt :value="messagesPerHour * 24 * 30.5"/> proj.
       </template>
       <template slot="after">
         <PercentileChange :value="messagesPerHour"/>
@@ -17,13 +17,13 @@
       title="Dynamo DB"
       color="#3f906b">
       <LabelledRatio
-        :numerator="3"
-        :denominator="3"
+        :numerator="service.datasets.ided('dynamoConsumedWrite').latest(3).max()"
+        :denominator="service.datasets.ided('dynamoProvisionedWrite').latest(3).max()"
         label="WCU"
       />
       <LabelledRatio
-        :numerator="1.5"
-        :denominator="3"
+        :numerator="service.datasets.ided('dynamoConsumedRead').latest(3).max()"
+        :denominator="service.datasets.ided('dynamoProvisionedRead').latest(3).max()"
         label="RCU"
       />
     </Tile>
@@ -84,6 +84,7 @@ import Tile from './Tile.vue';
 import ValueTile from './ValueTile.vue';
 import ChartTile from './ChartTile.vue';
 import PercentileChange from './PercentileChange.vue';
+import EngrInt from './EngrInt.vue';
 import LabelledRatio from './LabelledRatio.vue';
 import RelativeDate from './RelativeDate.vue';
 import CloudWatchService from '../services/CloudWatchService';
@@ -103,6 +104,7 @@ export default {
     ValueTile,
     ChartTile,
     PercentileChange,
+    EngrInt,
     LabelledRatio,
     RelativeDate,
   },
