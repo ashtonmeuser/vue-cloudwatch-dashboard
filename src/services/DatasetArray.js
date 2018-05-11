@@ -18,16 +18,12 @@ export default class DatasetArray extends Array {
     });
   }
 
-  mergedDataNoZeros() {
-    return this.reduce((merged, dataset) => (
-      merged.concat(dataset.data.filter(d => d.y > 0))
-    ), []);
-  }
+  // Math methods
 
   average() {
-    const noZeros = this.mergedDataNoZeros();
-    return noZeros
-      .reduce((sum, data) => sum + data.y, 0) / noZeros.length;
+    return this.sum() / this.reduce((sum, dataset) => (
+      sum + dataset.data.length
+    ), 0);
   }
 
   max() {
@@ -41,6 +37,18 @@ export default class DatasetArray extends Array {
     return this.reduce((sum, dataset) => (
       sum + dataset.data.reduce((s, d) => s + d.y, 0)
     ), 0);
+  }
+
+  // Subset methods
+
+  noZeros() {
+    const datasets = new DatasetArray();
+    this.forEach((dataset) => {
+      const trimmedDataset = objectAssignDeep({}, dataset);
+      trimmedDataset.data = trimmedDataset.data.filter(d => d.y > 0);
+      datasets.push(trimmedDataset);
+    });
+    return datasets;
   }
 
   latest(count = 1) {

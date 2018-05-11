@@ -48,7 +48,7 @@
       </template>
     </ValueTile>
     <ValueTile
-      :value="service.datasets.tagged('duration').average()"
+      :value="service.datasets.tagged('duration').noZeros().average()"
       title="Avg. Duration"
       color="#3f906b"
       unit="ms">
@@ -56,7 +56,7 @@
         {{ service.datasets.tagged('duration').max().toFixed(0) }}ms max.
       </template>
       <template slot="after">
-        <PercentileChange :value="service.datasets.tagged('duration').average()"/>
+        <PercentileChange :value="service.datasets.tagged('duration').noZeros().average()"/>
       </template>
     </ValueTile>
     <ChartTile
