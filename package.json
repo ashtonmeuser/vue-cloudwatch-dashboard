@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "vue-cloudwatch-dashboard",
-  "productName": "vue-cloudwatch-dashboard",
+  "productName": "CloudWatch Dashboard",
   "description": "A dashboard to display AWS CloudWatch metrics built with Vue.",
   "version": "0.0.0",
   "license": "MIT",
@@ -20,21 +20,21 @@
     "normalize.css": "^7.0.0",
     "object-assign": "^4.1.1",
     "object-assign-deep": "^0.4.0",
-    "offline-plugin": "^4.8.0",
+    "offline-plugin": "^5.0.3",
     "promise-polyfill": "^6.0.2",
+    "vue-axios": "^2.1.1",
     "vue-chartjs": "^3.3.1"
   },
   "devDependencies": {
-    "ajv": "^6.4.0",
+    "@poi/plugin-offline": "^10.0.0",
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-vue": "^4.5.0",
     "node-sass": "^4.9.0",
-    "poi": "^10.1.5",
-    "poi-plugin-offline": "^10.0.0-alpha.0",
+    "poi": "^10.1.6",
     "sass-loader": "^7.0.1",
-    "serve": "^6.1.0"
+    "serve": "^6.5.6"
   }
 }

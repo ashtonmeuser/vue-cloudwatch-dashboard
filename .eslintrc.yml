@@ -4,3 +4,7 @@ extends:
 
 parserOptions:
   ecmaVersion: 8
+
+settings:
+  import/core-modules:
+    - vue

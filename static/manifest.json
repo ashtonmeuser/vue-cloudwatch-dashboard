@@ -1,20 +1,21 @@
 {
-  "name": "vue-cloudwatch-dashboard",
-  "short_name": "vue-cloudwatch-dashboard",
+  "name": "CloudWatch Dashboard",
+  "short_name": "Dashboard",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#21243f",
+  "theme_color": "#21243f",
   "icons": [
     {
-      "src": "/icons/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "./icons/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
     },
     {
-      "src": "/icons/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "./icons/android-chrome-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
-  ],
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#4DBA87"
+  ]
 }

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import Vue from 'vue';
 import DatasetArray from './DatasetArray';
 
 export default class CloudWatchService {
@@ -37,7 +37,7 @@ export default class CloudWatchService {
       },
     };
     try {
-      const response = await axios.request(options);
+      const response = await Vue.axios.request(options);
       this.updatedAt = new Date(); // Doesn't reach if request failed
       this.appendData(response.data);
     } catch (error) { } // eslint-disable-line no-empty

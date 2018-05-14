@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="<%= htmlWebpackPlugin.options.description %>"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Dashboard">
+    <meta name="theme-color" content="#21243f"/>
+
     <title><%= htmlWebpackPlugin.options.title %></title>
 
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#4DBA87">
-
-    <% if (htmlWebpackPlugin.options.description) { %>
-    <meta name="description" content="<%= htmlWebpackPlugin.options.description %>"/>
-    <% } %>
-
-    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,900" rel="stylesheet">
+    <link rel="stylesheet" href="/fonts/nunito.css">
     <link rel="stylesheet" href="/style.css">
+
+    <link rel="apple-touch-icon" href="icons/ios-icon-180.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="icons/ios-icon-120.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icons/ios-icon-167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/ios-icon-152.png">
 
     <% for (var chunk of webpack.chunks) {
         for (var file of chunk.files) {
