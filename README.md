@@ -2,7 +2,17 @@
 
 ![Screenshot](img/screenshot.png)
 
-This project's asthetic was heavily inspired by [Vuepoint](https://github.com/ashtonmeuser/vuepoint). Much of the charting functionality has been stripped in favor of a simple means of interacting with CloudWatch metrics data. They may be added later. The project also favors a responsive layout that works on mobile devices.
+This project facilitates live monitoring CloudWatch metrics. All desired metrics are specified in JSON format.
+
+PWA functionality allows the app to be cached on a mobile device after it's been served via `npm run serve` command.
+
+A major problem with accessing CloudWatch metrics data is that metrics are often only reported when an event occurs. This results in data with many missing datapoints. The server-side Lambda function included in the project pads data with zero values whenever it is found to be missing.
+
+The period, backfill time, and refresh interval are all configurable. They have been set with reasonable values of five minutes, five minutes, and two hours, respectively. Please note that AWS promises that CloudWatch metrics will be populated with a latency of at most ten minutes.
+
+The charting capabilities of this project are limited in favor of a simple means of interacting with CloudWatch metrics data. More charting functionality may be added at a later date.
+
+This project's aesthetic was heavily inspired by [Vuepoint](https://github.com/ashtonmeuser/vuepoint).
 
 ## Commands
 
