@@ -1,0 +1,14 @@
+{
+  "name": "vue-cloudwatch-dashboard-server",
+  "version": "1.0.0",
+  "description": "Lambda function for Vue CloudWatch Dashboard",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ashton Meuser",
+  "license": "MIT",
+  "dependencies": {
+    "d3-scale": "^2.0.0",
+    "d3-time": "^1.0.8"
+  }
+}
