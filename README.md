@@ -1,4 +1,4 @@
-# Vue Cloudwatch Dashboard
+# Vue CloudWatch Dashboard
 
 ![Screenshot](img/screenshot.png)
 
