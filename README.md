@@ -47,7 +47,7 @@ Replace `NODE_ENV` with `development`, `test`, or `production`. These will be lo
 
 An AWS Lambda function can be used to serve properly formatted metrics to the CloudWatch Dashboard. Please see the [server](server) directory. To deploy, upload the [archive](server/archive.zip) to a Lambda function either via the AWS CLI or the web interface. If you make changes to the server-side logic, make sure you recreate and reupload the archive. 
 
-Create an endpoint using AWS API Gateway properly secure it with an API key or other security measure.
+Create an endpoint using AWS API Gateway and properly secure it with an API key or other security measure. After creating your API endpoint, add a POST method and select the lambda function you just created. Enable *Use Lambda Proxy integration*. Next, enable CORS via the action dropdown menu. If using an API key (recommended), create a usage plan. This will prompt you to create an API key and select an API. Name your key and select the API you just created. Note the endpoint URL and the API you created. These should be entered into the `.env.{NODE_ENV}` file.
 
 Please note that AWS charges for accessing CloudWatch metrics, so securing your endpoint should be a priority. This should also influence the refresh rate you choose. CloudWatch pricing information can be found [here](https://aws.amazon.com/cloudwatch/pricing/).
 
