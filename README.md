@@ -16,17 +16,25 @@ This project's aesthetic was heavily inspired by [Vuepoint](https://github.com/a
 
 ## Commands
 
-First, clone the repo. Run `npm install` to install dependencies. Run one of the following commands to build.
+First, clone the repo. Run `npm install` to install dependencies. Ensure the rest of the  setup is complete. The steps to setup are as follows.
+
+* Create a `metrics.json` file appropriate to the metrics you'd like to pull from CloudWatch.
+* Create `.env.{NODE_ENV}` file(s) appropriate to the way(s) in which you intend to build the web application. A `.env.development` file and `.env.production` file are recommended.
+* The lambda function uploaded to AWS. You can simply use the included [archive](server/archive.zip).
+* An API properly set up using API Gateway. See the *Lambda Function* section for more details.
+
+To build for development including hot reload, run the following.
+
+```bash
+# build for development
+npm run dev
+```
+
+To fully optimize the web application, run the following. This bundles the application into a `dist` directory. The production build also includes PWA support, which allows the web application to be cahced on a mobile device. Once the application is being served, access it on a mobile device and save it to your homescreen. The server can now be taken down as the application is cached and fully functional on your device.
 
 ```bash
 # build for production
 npm run build
-
-# development mode
-npm run dev
-
-# run unit tests
-npm test
 
 # serve the bundled dist folder in production mode
 npm run serve
