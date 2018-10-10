@@ -9,17 +9,13 @@ export default class DatasetArray {
     return this.array;
   }
 
-  push(dataset) {
-    this.array.push(dataset);
-  }
-
-  pushData(newDataset) {
+  upsert(newDataset) {
     const dataset = this.array.find(d => d.id === newDataset.id);
     if (typeof dataset === 'undefined') {
-      return false; // No dataset with matching ID
+      this.array.push(newDataset); // Insert
+      return;
     }
-    dataset.data.push(...newDataset.data);
-    return true;
+    dataset.data.push(...newDataset.data); // Update
   }
 
   removeDataDuplicates(maxDatapoints = Infinity) {
