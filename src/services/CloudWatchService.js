@@ -44,8 +44,8 @@ export default class CloudWatchService {
     return this.data;
   }
 
-  appendData(datasets) {
-    datasets.forEach((newDataset) => {
+  appendData(newDatasets) {
+    newDatasets.forEach((newDataset) => {
       if (!this.datasets.pushData(newDataset)) {
         // New dataset, add tags and label, push
         this.datasets.push(this.tagAndLabel(newDataset));

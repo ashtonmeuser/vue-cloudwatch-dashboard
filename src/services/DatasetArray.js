@@ -9,6 +9,10 @@ export default class DatasetArray {
     return this.array;
   }
 
+  push(dataset) {
+    this.array.push(dataset);
+  }
+
   pushData(newDataset) {
     const dataset = this.array.find(d => d.id === newDataset.id);
     if (typeof dataset === 'undefined') {
@@ -54,7 +58,7 @@ export default class DatasetArray {
     this.array.forEach((dataset) => {
       const trimmedDataset = objectAssignDeep({}, dataset);
       trimmedDataset.data = trimmedDataset.data.filter(d => d.y > 0);
-      datasets.push(trimmedDataset);
+      datasets.array.push(trimmedDataset);
     });
     return datasets;
   }
@@ -64,7 +68,7 @@ export default class DatasetArray {
     this.array.forEach((dataset) => {
       const trimmedDataset = objectAssignDeep({}, dataset);
       trimmedDataset.data = trimmedDataset.data.slice(count * -1);
-      datasets.push(trimmedDataset);
+      datasets.array.push(trimmedDataset);
     });
     return datasets;
   }
@@ -73,7 +77,7 @@ export default class DatasetArray {
     const datasets = new DatasetArray();
     this.array.forEach((dataset) => {
       if (dataset.tags.includes(tag)) {
-        datasets.push(dataset);
+        datasets.array.push(dataset);
       }
     });
     return datasets;
@@ -83,7 +87,7 @@ export default class DatasetArray {
     const datasets = new DatasetArray();
     this.array.forEach((dataset) => {
       if (dataset.id === id) {
-        datasets.push(dataset);
+        datasets.array.push(dataset);
       }
     });
     return datasets;
