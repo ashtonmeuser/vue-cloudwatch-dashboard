@@ -17,24 +17,25 @@
   "dependencies": {
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
-    "normalize.css": "^7.0.0",
+    "normalize.css": "^8.0.0",
     "object-assign": "^4.1.1",
     "object-assign-deep": "^0.4.0",
-    "offline-plugin": "^5.0.3",
-    "promise-polyfill": "^6.0.2",
-    "vue-axios": "^2.1.1",
-    "vue-chartjs": "^3.3.1"
+    "offline-plugin": "^5.0.5",
+    "promise-polyfill": "^8.1.0",
+    "vue-axios": "^2.1.4",
+    "vue-chartjs": "^3.4.0"
   },
   "devDependencies": {
-    "@poi/plugin-offline": "^10.0.0",
-    "dotenv": "^5.0.1",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-vue": "^4.5.0",
-    "node-sass": "^4.9.0",
-    "poi": "^10.1.6",
-    "sass-loader": "^7.0.1",
-    "serve": "^6.5.6"
+    "@poi/plugin-offline": "^10.0.1",
+    "dotenv": "^6.1.0",
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-vue": "^4.7.1",
+    "node-sass": "^4.9.3",
+    "poi": "^10.2.10",
+    "sass-loader": "^7.1.0",
+    "serve": "^10.0.2",
+    "vue": "^2.5.17"
   }
 }

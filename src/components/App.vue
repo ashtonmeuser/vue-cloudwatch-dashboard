@@ -28,7 +28,7 @@
       />
     </Tile>
     <ChartTile
-      :datasets="service.datasets.tagged('spotify')"
+      :datasets="service.datasets.tagged('spotify').asArray()"
       :width="2"
       :height="2"
       title="Spotify Search"
@@ -60,14 +60,14 @@
       </template>
     </ValueTile>
     <ChartTile
-      :datasets="service.datasets.tagged('duration')"
+      :datasets="service.datasets.tagged('duration').asArray()"
       :width="2"
       :height="2"
       title="Lambda Duration"
       color="#3f906b"
     />
     <ChartTile
-      :datasets="service.datasets.tagged('invocations')"
+      :datasets="service.datasets.tagged('invocations').asArray()"
       :width="2"
       :height="2"
       title="Lambda Invocations"

@@ -1,8 +1,16 @@
 import objectAssignDeep from 'object-assign-deep';
 
-export default class DatasetArray extends Array {
+export default class DatasetArray {
+  constructor() {
+    this.array = [];
+  }
+
+  asArray() {
+    return this.array;
+  }
+
   pushData(newDataset) {
-    const dataset = this.find(d => d.id === newDataset.id);
+    const dataset = this.array.find(d => d.id === newDataset.id);
     if (typeof dataset === 'undefined') {
       return false; // No dataset with matching ID
     }
@@ -11,8 +19,8 @@ export default class DatasetArray extends Array {
   }
 
   removeDataDuplicates(maxDatapoints = Infinity) {
-    this.forEach((dataset, index) => {
-      this[index].data = dataset.data
+    this.array.forEach((dataset, index) => {
+      this.array[index].data = dataset.data
         .filter((d, i, array) => array.map(a => a.t).lastIndexOf(d.t) === i)
         .slice(maxDatapoints * -1); // Ensure moving window
     });
@@ -21,20 +29,20 @@ export default class DatasetArray extends Array {
   // Math methods
 
   average() {
-    return this.sum() / this.reduce((sum, dataset) => (
+    return this.sum() / this.array.reduce((sum, dataset) => (
       sum + dataset.data.length
     ), 0);
   }
 
   max() {
-    const max = Math.max(...this.reduce((merged, dataset) => (
+    const max = Math.max(...this.array.reduce((merged, dataset) => (
       merged.concat(dataset.data.map(d => d.y))
     ), []));
     return max === -Infinity ? 0 : max;
   }
 
   sum() {
-    return this.reduce((sum, dataset) => (
+    return this.array.reduce((sum, dataset) => (
       sum + dataset.data.reduce((s, d) => s + d.y, 0)
     ), 0);
   }
@@ -43,7 +51,7 @@ export default class DatasetArray extends Array {
 
   noZeros() {
     const datasets = new DatasetArray();
-    this.forEach((dataset) => {
+    this.array.forEach((dataset) => {
       const trimmedDataset = objectAssignDeep({}, dataset);
       trimmedDataset.data = trimmedDataset.data.filter(d => d.y > 0);
       datasets.push(trimmedDataset);
@@ -53,7 +61,7 @@ export default class DatasetArray extends Array {
 
   latest(count = 1) {
     const datasets = new DatasetArray();
-    this.forEach((dataset) => {
+    this.array.forEach((dataset) => {
       const trimmedDataset = objectAssignDeep({}, dataset);
       trimmedDataset.data = trimmedDataset.data.slice(count * -1);
       datasets.push(trimmedDataset);
@@ -63,7 +71,7 @@ export default class DatasetArray extends Array {
 
   tagged(tag) {
     const datasets = new DatasetArray();
-    this.forEach((dataset) => {
+    this.array.forEach((dataset) => {
       if (dataset.tags.includes(tag)) {
         datasets.push(dataset);
       }
@@ -73,7 +81,7 @@ export default class DatasetArray extends Array {
 
   ided(id) {
     const datasets = new DatasetArray();
-    this.forEach((dataset) => {
+    this.array.forEach((dataset) => {
       if (dataset.id === id) {
         datasets.push(dataset);
       }

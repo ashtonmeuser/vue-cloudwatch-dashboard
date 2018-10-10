@@ -40,7 +40,7 @@ export default {
 
   props: {
     datasets: {
-      type: Object,
+      type: Array,
       default: () => new DatasetArray(),
     },
   },
