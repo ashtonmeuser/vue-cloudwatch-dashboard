@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "poi",
     "build": "poi build",
-    "serve": "serve dist --single"
+    "serve": "serve dist"
   },
   "author": {
     "name": "ashtonmeuser",
@@ -31,11 +31,10 @@
     "eslint": "^5.6.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-vue": "^4.7.1",
+    "eslint-plugin-vue": "^5.0.0-beta.3",
     "node-sass": "^4.9.3",
     "poi": "^10.2.10",
     "sass-loader": "^7.1.0",
-    "serve": "^10.0.2",
-    "vue": "^2.5.17"
+    "serve": "^10.0.2"
   }
 }
